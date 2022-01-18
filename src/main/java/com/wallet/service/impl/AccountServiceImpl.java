@@ -13,6 +13,9 @@ import com.wallet.repository.AccountRepository;
 import com.wallet.requestmodel.AccountRequest;
 import com.wallet.service.AccountService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AccountServiceImpl implements AccountService {
 
@@ -26,10 +29,14 @@ public class AccountServiceImpl implements AccountService {
 		BeanUtils.copyProperties(accountDto, account);
 
 		Random random = new Random();
-		account.setAccountNumber(random.nextInt(9000000) + 1000000);
+		Integer accountNumber = random.nextInt(9000000) + 1000000;
+
+		account.setAccountNumber(accountNumber);
 		account.setBalanceAmount(BigDecimal.ZERO);
 		account.setAccountStatus(AccountStatus.ACTIVE.name());
 
 		accountRepository.save(account);
+
+		log.info("Account with accountNumber: {} created successfully", accountNumber);
 	}
 }

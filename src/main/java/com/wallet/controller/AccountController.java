@@ -36,16 +36,17 @@ public class AccountController implements AccountContract {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> createAccount(@Valid @RequestBody AccountRequest accountRequest) {
 
-		try {
+		log.info("New account is getting created");
 
+		try {
 			accountService.createAccount(accountRequest);
+
 			return new ResponseEntity<String>(new ObjectMapper().writeValueAsString("Account created successfully!!"),
 					HttpStatus.CREATED);
 
 		} catch (Exception exception) {
 
 			log.error("Error occurred while creating an account: {}", exception.getMessage());
-
 			throw new WalletServiceException(exception.getMessage());
 		}
 	}
@@ -54,6 +55,8 @@ public class AccountController implements AccountContract {
 	@GetMapping(value = "{accountNumber}")
 	public ResponseEntity<AccountResponse> fetchBalance(
 			@PathVariable(name = "accountNumber") @NotBlank(message = "{accountNumber.not-blank}") String accountNumber) {
+
+		log.info("Fetching the balance for accountNumber: {}", accountNumber);
 
 		AccountResponse accountResponse = AccountResponse.builder().accountBalance(BigDecimal.ONE.toPlainString())
 				.build();
