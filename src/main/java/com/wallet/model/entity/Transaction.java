@@ -1,4 +1,6 @@
-package com.wallet.domain.model;
+package com.wallet.model.entity;
+
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +13,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,4 +38,7 @@ public class Transaction {
 
 	@Column(name = "transaction_type")
 	private String transactionType;
+
+	@Column(name = "transaction_date")
+	private LocalDateTime transactionDate;
 }

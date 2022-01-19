@@ -1,4 +1,4 @@
-package com.wallet.responsemodel;
+package com.wallet.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountResponse {
+
+	private String message;
+
+	private String accountNumber;
 
 	private String accountBalance;
 }

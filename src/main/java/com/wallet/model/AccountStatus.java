@@ -1,4 +1,4 @@
-package com.wallet.enums;
+package com.wallet.model;
 
 public enum AccountStatus {
 

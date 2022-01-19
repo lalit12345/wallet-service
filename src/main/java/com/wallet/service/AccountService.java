@@ -1,8 +1,11 @@
 package com.wallet.service;
 
-import com.wallet.requestmodel.AccountRequest;
+import com.wallet.model.dto.request.AccountRequest;
+import com.wallet.model.dto.response.AccountResponse;
 
 public interface AccountService {
 
-	void createAccount(AccountRequest accountDto);
+	AccountResponse createAccount(AccountRequest accountDto);
+
+	AccountResponse fetchBalance(String accountNumber);
 }

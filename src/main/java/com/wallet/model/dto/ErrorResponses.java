@@ -1,4 +1,6 @@
-package com.wallet.responsemodel;
+package com.wallet.model.dto;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -10,11 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorMessage {
+@Builder
+public class ErrorResponses {
 
-	private String field;
+	private int status;
 
-	private String error;
+	private String message;
+
+	private List<ErrorMessage> errors;
 }

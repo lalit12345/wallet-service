@@ -1,11 +1,14 @@
 package com.wallet.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.wallet.domain.model.Account;
+import com.wallet.model.entity.Account;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
+	Optional<Account> findByAccountNumber(String accountNumber);
 }

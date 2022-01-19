@@ -1,4 +1,4 @@
-package com.wallet.domain.model;
+package com.wallet.model.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -35,7 +35,7 @@ public class Account implements Serializable {
 	private Long id;
 
 	@Column(name = "account_number")
-	private Integer accountNumber;
+	private String accountNumber;
 
 	@Column(name = "email_id")
 	private String emailId;

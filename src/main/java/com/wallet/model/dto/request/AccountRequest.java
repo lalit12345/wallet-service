@@ -1,10 +1,13 @@
-package com.wallet.requestmodel;
+package com.wallet.model.dto.request;
 
+import java.math.BigDecimal;
+
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import com.wallet.enums.AccountType;
+import com.wallet.model.AccountType;
 import com.wallet.validator.EnumValidator;
 
 import lombok.AllArgsConstructor;
@@ -31,4 +34,7 @@ public class AccountRequest {
 
 	@EnumValidator(enumClass = AccountType.class, message = "{accountType.invalid}")
 	private String accountType;
+
+	@DecimalMin(value = "1", message = "{amount.min}")
+	private BigDecimal balanceAmount;
 }
