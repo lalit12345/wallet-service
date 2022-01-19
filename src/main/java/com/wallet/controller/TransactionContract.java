@@ -31,4 +31,21 @@ public interface TransactionContract {
 			@ApiResponse(responseCode = "500", description = "Internal server error") })
 	ResponseEntity<TransactionResponse> performDebit(
 			@Parameter(description = "Perform a DEBIT transaction on given account") TransactionRequest transactionRequest);
+
+	/**
+	 * Perform a DEBIT transaction on given account number and created transaction
+	 * record for given transactionId
+	 * 
+	 * @param transactionRequest
+	 * @return a response entity with transaction response
+	 */
+	@Operation(summary = "Perform a CREDIT transaction on given account", tags = { "api/v1/transaction/credit" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Account credited successfully", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class)) }),
+			@ApiResponse(responseCode = "400", description = "Invalid request body"),
+			@ApiResponse(responseCode = "409", description = "Duplicate transaction found"),
+			@ApiResponse(responseCode = "500", description = "Internal server error") })
+	ResponseEntity<TransactionResponse> performCredit(
+			@Parameter(description = "Perform a CREDIT transaction on given account") TransactionRequest transactionRequest);
 }

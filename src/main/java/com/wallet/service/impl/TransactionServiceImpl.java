@@ -54,15 +54,42 @@ public class TransactionServiceImpl implements TransactionService {
 
 		// Create transaction record
 		LocalDateTime now = LocalDateTime.now();
-		List<Transaction> transactions = createTransaction(transactionRequest.getTransactionId(), now, account);
+		List<Transaction> transactions = createTransaction(transactionRequest.getTransactionId(), now,
+				TransactionType.DEBIT.name(), account);
 
 		account.setTransactions(transactions);
 		Account savedAccount = accountRepository.save(account);
 
 		return TransactionResponse.builder().message("Account debited successfully")
 				.accountNumber(savedAccount.getAccountNumber())
-				.accountBalance(savedAccount.getBalanceAmount().toPlainString()).transactionDate(getCurrentTime(now))
-				.build();
+				.accountBalance(savedAccount.getBalanceAmount().toPlainString())
+				.transactionDate(getCurrentTimeString(now)).build();
+	}
+
+	@Override
+	public TransactionResponse performCredit(TransactionRequest transactionRequest) {
+
+		// Check account exists
+		Optional<Account> optionalAccount = checkAccountExists(transactionRequest.getAccountNumber());
+
+		// Check duplicate transaction
+		checkDuplicateTransaction(transactionRequest.getTransactionId());
+
+		Account account = optionalAccount.get();
+		account.setBalanceAmount(account.getBalanceAmount().add(transactionRequest.getAmount()));
+
+		// Create transaction record
+		LocalDateTime now = LocalDateTime.now();
+		List<Transaction> transactions = createTransaction(transactionRequest.getTransactionId(), now,
+				TransactionType.CREDIT.name(), account);
+
+		account.setTransactions(transactions);
+		Account savedAccount = accountRepository.save(account);
+
+		return TransactionResponse.builder().message("Account credited successfully")
+				.accountNumber(savedAccount.getAccountNumber())
+				.accountBalance(savedAccount.getBalanceAmount().toPlainString())
+				.transactionDate(getCurrentTimeString(now)).build();
 	}
 
 	private Optional<Account> checkAccountExists(String accountNumber) {
@@ -104,18 +131,19 @@ public class TransactionServiceImpl implements TransactionService {
 		return remainingBalance;
 	}
 
-	private List<Transaction> createTransaction(String transactionId, LocalDateTime now, Account account) {
+	private List<Transaction> createTransaction(String transactionId, LocalDateTime now, String transactionType,
+			Account account) {
 
 		List<Transaction> transactions = new ArrayList<>();
 
-		Transaction transaction = Transaction.builder().transactionType(TransactionType.DEBIT.name())
-				.transactionId(transactionId).transactionDate(now).account(account).build();
+		Transaction transaction = Transaction.builder().transactionType(transactionType).transactionId(transactionId)
+				.transactionDate(now).account(account).build();
 		transactions.add(transaction);
 
 		return transactions;
 	}
 
-	private String getCurrentTime(LocalDateTime now) {
+	private String getCurrentTimeString(LocalDateTime now) {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 

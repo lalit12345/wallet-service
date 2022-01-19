@@ -27,8 +27,20 @@ public class TransactionController implements TransactionContract {
 	@PostMapping(value = "/debit")
 	public ResponseEntity<TransactionResponse> performDebit(@Valid @RequestBody TransactionRequest transactionRequest) {
 
-		log.info("Performing DEBIT transaction on account: {}", transactionRequest.getAccountNumber());
+		log.info("Performing DEBIT transaction on account: {} with transactionId: {}",
+				transactionRequest.getAccountNumber(), transactionRequest.getTransactionId());
 
 		return ResponseEntity.ok(transactionService.performDebit(transactionRequest));
+	}
+
+	@Override
+	@PostMapping(value = "/credit")
+	public ResponseEntity<TransactionResponse> performCredit(
+			@Valid @RequestBody TransactionRequest transactionRequest) {
+
+		log.info("Performing CREDIT transaction on account: {} with transactionId: {}",
+				transactionRequest.getAccountNumber(), transactionRequest.getTransactionId());
+
+		return ResponseEntity.ok(transactionService.performCredit(transactionRequest));
 	}
 }
