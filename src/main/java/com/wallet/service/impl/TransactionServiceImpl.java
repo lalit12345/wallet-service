@@ -38,10 +38,10 @@ public class TransactionServiceImpl implements TransactionService {
 	private TransactionRepository transactionRepository;
 
 	@Override
-	public TransactionResponse performDebit(TransactionRequest transactionRequest) {
+	public TransactionResponse performDebit(String accountNumber, TransactionRequest transactionRequest) {
 
 		// Check account exists
-		Optional<Account> optionalAccount = checkAccountExists(transactionRequest.getAccountNumber());
+		Optional<Account> optionalAccount = checkAccountExists(accountNumber);
 
 		// Check duplicate transaction
 		checkDuplicateTransaction(transactionRequest.getTransactionId());
@@ -67,10 +67,10 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public TransactionResponse performCredit(TransactionRequest transactionRequest) {
+	public TransactionResponse performCredit(String accountNumber, TransactionRequest transactionRequest) {
 
 		// Check account exists
-		Optional<Account> optionalAccount = checkAccountExists(transactionRequest.getAccountNumber());
+		Optional<Account> optionalAccount = checkAccountExists(accountNumber);
 
 		// Check duplicate transaction
 		checkDuplicateTransaction(transactionRequest.getTransactionId());

@@ -17,9 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransactionRequest {
 
-	@NotBlank(message = "{accountNumber.not-blank}")
-	private String accountNumber;
-
 	@NotBlank(message = "{transactionId.not-blank}")
 	@Size(max = 20, message = "{transactionId.size}")
 	private String transactionId;

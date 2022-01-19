@@ -15,18 +15,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wallet.exception.WalletServiceException;
 import com.wallet.model.dto.request.AccountRequest;
+import com.wallet.model.dto.request.TransactionRequest;
 import com.wallet.model.dto.response.AccountResponse;
+import com.wallet.model.dto.response.TransactionResponse;
 import com.wallet.service.AccountService;
+import com.wallet.service.TransactionService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/v1/account")
+@RequestMapping(value = "/accounts")
 public class AccountController implements AccountContract {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private TransactionService transactionService;
 
 	@Override
 	@PostMapping
@@ -46,12 +52,46 @@ public class AccountController implements AccountContract {
 	}
 
 	@Override
-	@GetMapping(value = "{accountNumber}/balance")
+	@GetMapping(value = "/{accountNumber}/balance")
 	public ResponseEntity<AccountResponse> fetchBalance(
 			@PathVariable(name = "accountNumber") @NotBlank(message = "{accountNumber.not-blank}") String accountNumber) {
 
 		log.info("Fetching the balance for accountNumber: {}", accountNumber);
 
 		return ResponseEntity.ok().body(accountService.fetchBalance(accountNumber));
+	}
+
+	@Override
+	@PostMapping(value = "/{accountNumber}/transactions/debit")
+	public ResponseEntity<TransactionResponse> performDebit(
+			@NotBlank @PathVariable(name = "accountNumber") String accountNumber,
+			@Valid @RequestBody TransactionRequest transactionRequest) {
+
+		log.info("Performing DEBIT transaction on account: {} with transactionId: {}", accountNumber,
+				transactionRequest.getTransactionId());
+
+		return ResponseEntity.ok(transactionService.performDebit(accountNumber, transactionRequest));
+	}
+
+	@Override
+	@PostMapping(value = "/{accountNumber}/transactions/credit")
+	public ResponseEntity<TransactionResponse> performCredit(
+			@NotBlank @PathVariable(name = "accountNumber") String accountNumber,
+			@Valid @RequestBody TransactionRequest transactionRequest) {
+
+		log.info("Performing CREDIT transaction on account: {} with transactionId: {}", accountNumber,
+				transactionRequest.getTransactionId());
+
+		return ResponseEntity.ok(transactionService.performCredit(accountNumber, transactionRequest));
+	}
+
+	@Override
+	@GetMapping(value = "/{accountNumber}/transactions")
+	public ResponseEntity<TransactionResponse> getAllTransactions(
+			@NotBlank @PathVariable(name = "accountNumber") String accountNumber) {
+
+		log.info("Get all transactions for given accountNumber: {}", accountNumber);
+
+		return ResponseEntity.ok().build();
 	}
 }

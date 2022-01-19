@@ -5,7 +5,7 @@ import com.wallet.model.dto.response.TransactionResponse;
 
 public interface TransactionService {
 
-	TransactionResponse performDebit(TransactionRequest transactionRequest);
+	TransactionResponse performDebit(String accountNumber, TransactionRequest transactionRequest);
 
-	TransactionResponse performCredit(TransactionRequest transactionRequest);
+	TransactionResponse performCredit(String accountNumber, TransactionRequest transactionRequest);
 }
