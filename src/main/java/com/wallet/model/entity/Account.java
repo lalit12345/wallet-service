@@ -34,27 +34,27 @@ public class Account implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "account_number")
+	@Column(name = "account_number", nullable = false)
 	private String accountNumber;
 
-	@Column(name = "email_id")
+	@Column(name = "email_id", nullable = false)
 	private String emailId;
 
-	@Column(name = "full_name")
+	@Column(name = "full_name", nullable = false)
 	private String fullName;
 
-	@Column(name = "mobile_number")
+	@Column(name = "mobile_number", nullable = false)
 	private String mobileNumber;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 	private List<Transaction> transactions;
 
-	@Column(name = "balance_amount")
+	@Column(name = "balance_amount", nullable = false)
 	private BigDecimal balanceAmount;
 
-	@Column(name = "account_type")
+	@Column(name = "account_type", nullable = false)
 	private String accountType;
 
-	@Column(name = "account_status")
+	@Column(name = "account_status", nullable = false)
 	private String accountStatus;
 }

@@ -1,7 +1,5 @@
 package com.wallet.model.dto.response;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -13,14 +11,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class TransactionResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class TransactionDto {
 
-	private int status;
-
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	private List<TransactionDto> transactions;
 	private String message;
-	private int totalNoOfPages;
-	private int totalNoOfTransactions;
+
+	private String accountNumber;
+
+	private String accountBalance;
+
+	private String transactionId;
+
+	private String transactionType;
+
+	private String transactionDate;
+
+	private String transactionAmount;
 }

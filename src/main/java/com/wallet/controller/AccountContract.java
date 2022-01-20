@@ -4,7 +4,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.wallet.model.dto.request.AccountRequest;
 import com.wallet.model.dto.request.TransactionRequest;
-import com.wallet.model.dto.response.AccountResponse;
+import com.wallet.model.dto.response.AccountDto;
+import com.wallet.model.dto.response.TransactionDto;
 import com.wallet.model.dto.response.TransactionResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ public interface AccountContract {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class)) }),
 			@ApiResponse(responseCode = "400", description = "Invalid request body"),
 			@ApiResponse(responseCode = "500", description = "Internal server error") })
-	ResponseEntity<AccountResponse> createAccount(
+	ResponseEntity<AccountDto> createAccount(
 			@Parameter(description = "Create an account of given type") AccountRequest accountRequest);
 
 	/**
@@ -43,7 +44,7 @@ public interface AccountContract {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Balance fetched successfully"),
 			@ApiResponse(responseCode = "400", description = "Invalid account number"),
 			@ApiResponse(responseCode = "500", description = "Internal server error") })
-	ResponseEntity<AccountResponse> fetchBalance(
+	ResponseEntity<AccountDto> fetchBalance(
 			@Parameter(description = "Fetch the balance for the given account number") String accountNumber);
 
 	/**
@@ -60,7 +61,7 @@ public interface AccountContract {
 			@ApiResponse(responseCode = "400", description = "Invalid request body"),
 			@ApiResponse(responseCode = "409", description = "Duplicate transaction found"),
 			@ApiResponse(responseCode = "500", description = "Internal server error") })
-	ResponseEntity<TransactionResponse> performDebit(
+	ResponseEntity<TransactionDto> performDebit(
 			@Parameter(description = "Perform a DEBIT transaction on given account") String accountNumber,
 			TransactionRequest transactionRequest);
 
@@ -79,7 +80,7 @@ public interface AccountContract {
 			@ApiResponse(responseCode = "400", description = "Invalid request body"),
 			@ApiResponse(responseCode = "409", description = "Duplicate transaction found"),
 			@ApiResponse(responseCode = "500", description = "Internal server error") })
-	ResponseEntity<TransactionResponse> performCredit(
+	ResponseEntity<TransactionDto> performCredit(
 			@Parameter(description = "Perform a CREDIT transaction on given account") String accountNumber,
 			TransactionRequest transactionRequest);
 
@@ -89,12 +90,12 @@ public interface AccountContract {
 	 * @param account number
 	 * @return a response entity with transactions
 	 */
-	@Operation(summary = "Get all transactions for given user account", tags = {
-			"/accounts/{accountNumber}/transactions" })
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Transaction details"),
+	@Operation(summary = "Get all transactions for given user account", tags = { "/accounts/transactions" })
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Transaction details per user"),
 			@ApiResponse(responseCode = "400", description = "Invalid account number"),
 			@ApiResponse(responseCode = "500", description = "Internal server error") })
 	ResponseEntity<TransactionResponse> getAllTransactions(
-			@Parameter(description = "Get all transactions for given user account") String accountNumber);
+			@Parameter(description = "Get all transactions for given user account") String accountNumber, Integer page,
+			Integer limit);
 
 }

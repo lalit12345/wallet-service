@@ -7,10 +7,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wallet.exception.AccountNotFoundException;
+import com.wallet.exception.AccountDoesNotExistException;
 import com.wallet.model.AccountStatus;
+import com.wallet.model.Constants;
 import com.wallet.model.dto.request.AccountRequest;
-import com.wallet.model.dto.response.AccountResponse;
+import com.wallet.model.dto.response.AccountDto;
 import com.wallet.model.entity.Account;
 import com.wallet.repository.AccountRepository;
 import com.wallet.service.AccountService;
@@ -25,7 +26,7 @@ public class AccountServiceImpl implements AccountService {
 	private AccountRepository accountRepository;
 
 	@Override
-	public AccountResponse createAccount(AccountRequest accountDto) {
+	public AccountDto createAccount(AccountRequest accountDto) {
 
 		Account account = new Account();
 		BeanUtils.copyProperties(accountDto, account);
@@ -40,24 +41,26 @@ public class AccountServiceImpl implements AccountService {
 
 		log.info("Account created successfully with accountNumber: {}", accountNumber);
 
-		return AccountResponse.builder().message("Account created succesfully").accountNumber(accountNumber).build();
+		return AccountDto.builder().message(Constants.ACCOUNT_CREATION_SUCCESS_MESSAGE).accountNumber(accountNumber)
+				.build();
 	}
 
 	@Override
-	public AccountResponse fetchBalance(String accountNumber) {
+	public AccountDto fetchBalance(String accountNumber) {
 
-		Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
+		Optional<Account> optionalAccount = accountRepository.findByAccountNumberAndAccountStatus(accountNumber,
+				AccountStatus.ACTIVE.name());
 
 		if (optionalAccount.isEmpty()) {
 
-			log.error("Account not found with accountNumber: {}", accountNumber);
-			throw new AccountNotFoundException(
-					String.format("Account not found with accountNumber: %s", accountNumber));
+			log.error(String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
+			throw new AccountDoesNotExistException(
+					String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
 		}
 
 		Account account = optionalAccount.get();
 
-		return AccountResponse.builder().message("Account balance fetched successfully")
+		return AccountDto.builder().message(Constants.BALANCE_SUCCESS_MESSAGE)
 				.accountBalance(account.getBalanceAmount().toPlainString()).accountNumber(account.getAccountNumber())
 				.build();
 	}

@@ -10,5 +10,5 @@ import com.wallet.model.entity.Account;
 @Repository
 public interface AccountRepository extends PagingAndSortingRepository<Account, Long> {
 
-	Optional<Account> findByAccountNumber(String accountNumber);
+	Optional<Account> findByAccountNumberAndAccountStatus(String accountNumber, String accountStatus);
 }
