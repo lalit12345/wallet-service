@@ -30,7 +30,7 @@ import com.wallet.model.entity.Transaction;
 import com.wallet.repository.AccountRepository;
 import com.wallet.repository.TransactionRepository;
 import com.wallet.service.TransactionService;
-import com.wallet.util.TransactionUtil;
+import com.wallet.util.Util;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +46,7 @@ public class TransactionServiceImpl implements TransactionService {
 	private TransactionRepository transactionRepository;
 
 	@Autowired
-	private TransactionUtil transactionUtil;
+	private Util transactionUtil;
 
 	@Override
 	public TransactionDto performDebit(String accountNumber, TransactionRequest transactionRequest) {

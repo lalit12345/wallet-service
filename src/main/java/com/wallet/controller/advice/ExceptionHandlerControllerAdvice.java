@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.wallet.exception.AccountDoesNotExistException;
 import com.wallet.exception.DuplicateTransactionException;
 import com.wallet.exception.InsufficientFundException;
-import com.wallet.exception.WalletServiceException;
 import com.wallet.model.dto.ErrorMessage;
 import com.wallet.model.dto.ErrorResponses;
 
@@ -67,17 +66,5 @@ public class ExceptionHandlerControllerAdvice {
 				.message(exception.getMessage()).build();
 
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponses);
-	}
-
-	@ExceptionHandler(WalletServiceException.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ResponseEntity<ErrorResponses> processException(final Exception exception) {
-
-		log.error("Exception: {}, {}", HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
-
-		ErrorResponses errorResponses = ErrorResponses.builder().status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-				.message(exception.getMessage()).build();
-
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponses);
 	}
 }

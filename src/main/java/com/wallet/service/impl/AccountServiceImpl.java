@@ -1,7 +1,8 @@
 package com.wallet.service.impl;
 
 import java.util.Optional;
-import java.util.Random;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,20 @@ import com.wallet.model.dto.response.AccountDto;
 import com.wallet.model.entity.Account;
 import com.wallet.repository.AccountRepository;
 import com.wallet.service.AccountService;
+import com.wallet.util.Util;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Transactional
 @Service
 public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	private AccountRepository accountRepository;
+
+	@Autowired
+	private Util accountUtil;
 
 	@Override
 	public AccountDto createAccount(AccountRequest accountDto) {
@@ -31,9 +37,7 @@ public class AccountServiceImpl implements AccountService {
 		Account account = new Account();
 		BeanUtils.copyProperties(accountDto, account);
 
-		Random random = new Random();
-		String accountNumber = String.valueOf(random.nextInt(9000000) + 1000000);
-
+		String accountNumber = accountUtil.generateAccountNumber();
 		account.setAccountNumber(accountNumber);
 		account.setAccountStatus(AccountStatus.ACTIVE.name());
 

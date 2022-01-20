@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wallet.exception.WalletServiceException;
 import com.wallet.model.dto.request.AccountRequest;
 import com.wallet.model.dto.request.TransactionRequest;
 import com.wallet.model.dto.response.AccountDto;
@@ -44,14 +43,7 @@ public class AccountController implements AccountContract {
 
 		log.info("New account is getting created");
 
-		try {
-			return new ResponseEntity<AccountDto>(accountService.createAccount(accountRequest), HttpStatus.CREATED);
-
-		} catch (Exception exception) {
-
-			log.error("Error occurred while creating an account: {}", exception.getMessage());
-			throw new WalletServiceException(exception.getMessage());
-		}
+		return new ResponseEntity<AccountDto>(accountService.createAccount(accountRequest), HttpStatus.CREATED);
 	}
 
 	@Override

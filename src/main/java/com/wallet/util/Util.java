@@ -2,6 +2,7 @@ package com.wallet.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 import org.springframework.stereotype.Component;
 
@@ -9,9 +10,15 @@ import com.wallet.model.dto.response.TransactionDto;
 import com.wallet.model.entity.Transaction;
 
 @Component
-public class TransactionUtil {
+public class Util {
 
 	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+
+	public String generateAccountNumber() {
+
+		Random random = new Random();
+		return String.valueOf(random.nextInt(9000000) + 1000000);
+	}
 
 	public String getTimeString(LocalDateTime now) {
 
