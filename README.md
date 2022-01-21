@@ -10,7 +10,7 @@ A service to manage Credit/Debit entries for a player
 - H2 condole can be accessed using http://localhost:8080/v1/accounts/h2-console/login.jsp URL. Password is mentioned in ***src/main/resources/application.properties*** which can be changed 
 
 ## How to run:
-1. Run command ***mvn spring-boot:run***
+1. Run command ***mvn spring-boot:run*** from project folder
 2. URL for swagger: http://localhost:8080/v1/accounts/swagger-ui/index.html OR ***API_Schema.json*** (kept in project folder) can be imported into postman for accessing the API's
 
 ## API's available
