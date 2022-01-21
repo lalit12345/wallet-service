@@ -45,7 +45,7 @@ public class ExceptionHandlerControllerAdvice {
 
 	@ExceptionHandler(InvalidRequestDataException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<ErrorResponses> processNotFoundException(final Exception exception) {
+	public ResponseEntity<ErrorResponses> processNotFoundException(final InvalidRequestDataException exception) {
 
 		log.error("Exception: {}, {}", HttpStatus.BAD_REQUEST.value(), exception.getMessage());
 
@@ -57,7 +57,7 @@ public class ExceptionHandlerControllerAdvice {
 
 	@ExceptionHandler(DuplicateTransactionException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
-	public ResponseEntity<ErrorResponses> processDuplicateException(final Exception exception) {
+	public ResponseEntity<ErrorResponses> processDuplicateException(final DuplicateTransactionException exception) {
 
 		log.error("Exception: {}, {}", HttpStatus.CONFLICT.value(), exception.getMessage());
 
@@ -65,5 +65,17 @@ public class ExceptionHandlerControllerAdvice {
 				.message(exception.getMessage()).build();
 
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponses);
+	}
+
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<ErrorResponses> processException(final Exception exception) {
+
+		log.error("Exception: {}, {}", HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
+
+		ErrorResponses errorResponses = ErrorResponses.builder().status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+				.message(exception.getMessage()).build();
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponses);
 	}
 }

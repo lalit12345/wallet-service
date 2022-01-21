@@ -186,6 +186,21 @@ public class AccountControllerTest {
 	}
 
 	@Test
+	public void shouldReturnInternalServerErrorWhenRuntimeExceptionOccurs() throws Exception {
+
+		TransactionRequest transactionRequest = TransactionRequest.builder().amount(new BigDecimal(1))
+				.transactionId("TId1T8").build();
+
+		when(transactionService.performDebit(anyString(), any()))
+				.thenThrow(new RuntimeException("Internal server error occurred"));
+
+		mockMvc.perform(post("/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(toJsonString(transactionRequest))).andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.status").value(500))
+				.andExpect(jsonPath("$.message").value("Internal server error occurred"));
+	}
+
+	@Test
 	public void shouldCreditTheAmountToAccount() throws Exception {
 
 		TransactionRequest transactionRequest = TransactionRequest.builder().amount(new BigDecimal(10))
