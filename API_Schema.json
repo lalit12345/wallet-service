@@ -1,0 +1,488 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "OpenAPI definition",
+		"version": "v0"
+	},
+	"servers": [{
+		"url": "http://localhost:8080/v1/accounts",
+		"description": "Generated server url"
+	}],
+	"tags": [{
+		"name": "/v1/accounts",
+		"description": "Account related operations for the user"
+	}],
+	"paths": {
+		"/": {
+			"post": {
+				"tags": ["/v1/accounts"],
+				"summary": "Create an account of given type",
+				"operationId": "createAccount",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AccountRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"400": {
+						"description": "Invalid request body",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Account created successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AccountRequest"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/{accountNumber}/transactions/debit": {
+			"post": {
+				"tags": ["/v1/accounts"],
+				"summary": "Perform a DEBIT transaction on given account",
+				"operationId": "performDebit",
+				"parameters": [{
+					"name": "accountNumber",
+					"in": "path",
+					"description": "Perform a DEBIT transaction on given account",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				}],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TransactionRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"400": {
+						"description": "Invalid request body",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Duplicate transaction found",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"200": {
+						"description": "Account debited successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TransactionRequest"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/{accountNumber}/transactions/credit": {
+			"post": {
+				"tags": ["/v1/accounts"],
+				"summary": "Perform a CREDIT transaction on given account",
+				"operationId": "performCredit",
+				"parameters": [{
+					"name": "accountNumber",
+					"in": "path",
+					"description": "Perform a CREDIT transaction on given account",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				}],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TransactionRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"400": {
+						"description": "Invalid request body",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Duplicate transaction found",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"200": {
+						"description": "Account credited successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TransactionRequest"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/{accountNumber}/balance": {
+			"get": {
+				"tags": ["/v1/accounts"],
+				"summary": "Fetch the balance for the given account number",
+				"operationId": "fetchBalance",
+				"parameters": [{
+					"name": "accountNumber",
+					"in": "path",
+					"description": "Fetch the balance for the given account number",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				}],
+				"responses": {
+					"400": {
+						"description": "Invalid account number",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"200": {
+						"description": "Balance fetched successfully",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/AccountDto"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/transactions": {
+			"get": {
+				"tags": ["/v1/accounts"],
+				"summary": "Get all transactions for given user account",
+				"operationId": "getAllTransactions",
+				"parameters": [{
+					"name": "accountNumber",
+					"in": "query",
+					"description": "Get all transactions for given user account",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				}, {
+					"name": "page",
+					"in": "query",
+					"required": false,
+					"schema": {
+						"minimum": 0,
+						"type": "integer",
+						"format": "int32",
+						"default": 0
+					}
+				}, {
+					"name": "limit",
+					"in": "query",
+					"required": false,
+					"schema": {
+						"maximum": 50,
+						"minimum": 1,
+						"type": "integer",
+						"format": "int32",
+						"default": 10
+					}
+				}],
+				"responses": {
+					"400": {
+						"description": "Invalid account number",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponses"
+								}
+							}
+						}
+					},
+					"200": {
+						"description": "Transaction details per user",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/TransactionResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"ErrorMessage": {
+				"type": "object",
+				"properties": {
+					"field": {
+						"type": "string"
+					},
+					"error": {
+						"type": "string"
+					}
+				}
+			},
+			"ErrorResponses": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"message": {
+						"type": "string"
+					},
+					"errors": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ErrorMessage"
+						}
+					}
+				}
+			},
+			"AccountRequest": {
+				"required": ["emailId", "fullName", "mobileNumber"],
+				"type": "object",
+				"properties": {
+					"fullName": {
+						"type": "string"
+					},
+					"emailId": {
+						"type": "string"
+					},
+					"mobileNumber": {
+						"pattern": "^[0-9]+?|^$",
+						"type": "string"
+					},
+					"accountType": {
+						"type": "string"
+					},
+					"balanceAmount": {
+						"minimum": 1,
+						"exclusiveMinimum": false,
+						"type": "number"
+					}
+				}
+			},
+			"TransactionRequest": {
+				"required": ["transactionId"],
+				"type": "object",
+				"properties": {
+					"transactionId": {
+						"maxLength": 20,
+						"minLength": 0,
+						"type": "string"
+					},
+					"amount": {
+						"minimum": 1,
+						"exclusiveMinimum": false,
+						"type": "number"
+					}
+				}
+			},
+			"AccountDto": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"accountNumber": {
+						"type": "string"
+					},
+					"accountBalance": {
+						"type": "string"
+					}
+				}
+			},
+			"TransactionDto": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"accountNumber": {
+						"type": "string"
+					},
+					"accountBalance": {
+						"type": "string"
+					},
+					"transactionId": {
+						"type": "string"
+					},
+					"transactionType": {
+						"type": "string"
+					},
+					"transactionDate": {
+						"type": "string"
+					},
+					"transactionAmount": {
+						"type": "string"
+					}
+				}
+			},
+			"TransactionResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"transactions": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/TransactionDto"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"totalNoOfPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"totalNoOfTransactions": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			}
+		}
+	}
+}
