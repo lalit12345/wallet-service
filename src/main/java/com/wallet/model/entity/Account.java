@@ -37,13 +37,13 @@ public class Account implements Serializable {
 	@Column(name = "account_number", nullable = false)
 	private String accountNumber;
 
-	@Column(name = "email_id", nullable = false)
+	@Column(name = "email_id", nullable = false, unique = true)
 	private String emailId;
 
 	@Column(name = "full_name", nullable = false)
 	private String fullName;
 
-	@Column(name = "mobile_number", nullable = false)
+	@Column(name = "mobile_number", nullable = false, unique = true)
 	private String mobileNumber;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)

@@ -1,0 +1,3 @@
+INSERT INTO account (account_number, email_id, full_name, mobile_number, balance_amount, account_type, account_status) VALUES ('456789', 'testuser1@test.com', 'testuser1 test', '1111111111', 1000, 'SAVINGS', 'ACTIVE');
+INSERT INTO account (account_number, email_id, full_name, mobile_number, balance_amount, account_type, account_status) VALUES ('987654', 'testuser2@test.com', 'testuser2 test', '2222222222', 1000, 'SAVINGS', 'ACTIVE');
+INSERT INTO account (account_number, email_id, full_name, mobile_number, balance_amount, account_type, account_status) VALUES ('012345', 'testuser3@test.com', 'testuser3 test', '3333333333', 1000, 'SAVINGS', 'ACTIVE');

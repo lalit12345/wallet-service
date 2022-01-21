@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.wallet.exception.AccountDoesNotExistException;
 import com.wallet.exception.DuplicateTransactionException;
-import com.wallet.exception.InsufficientFundException;
+import com.wallet.exception.InvalidRequestDataException;
 import com.wallet.model.dto.ErrorMessage;
 import com.wallet.model.dto.ErrorResponses;
 
@@ -44,7 +43,7 @@ public class ExceptionHandlerControllerAdvice {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponses);
 	}
 
-	@ExceptionHandler({ AccountDoesNotExistException.class, InsufficientFundException.class })
+	@ExceptionHandler(InvalidRequestDataException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ErrorResponses> processNotFoundException(final Exception exception) {
 

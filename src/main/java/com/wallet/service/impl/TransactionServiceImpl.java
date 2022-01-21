@@ -16,9 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.wallet.exception.AccountDoesNotExistException;
 import com.wallet.exception.DuplicateTransactionException;
-import com.wallet.exception.InsufficientFundException;
+import com.wallet.exception.InvalidRequestDataException;
 import com.wallet.model.AccountStatus;
 import com.wallet.model.Constants;
 import com.wallet.model.TransactionType;
@@ -159,8 +158,7 @@ public class TransactionServiceImpl implements TransactionService {
 		if (optionalAccount.isEmpty()) {
 
 			log.error(String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
-			throw new AccountDoesNotExistException(
-					String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
+			throw new InvalidRequestDataException(String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
 		}
 		return optionalAccount;
 	}
@@ -184,7 +182,7 @@ public class TransactionServiceImpl implements TransactionService {
 		if (remainingBalance.compareTo(BigDecimal.ZERO) < 0) {
 
 			log.error(Constants.INSUFFICIENT_FUNDS_MESSAGE);
-			throw new InsufficientFundException(Constants.INSUFFICIENT_FUNDS_MESSAGE);
+			throw new InvalidRequestDataException(Constants.INSUFFICIENT_FUNDS_MESSAGE);
 		}
 
 		return remainingBalance;

@@ -44,8 +44,8 @@ public class TransactionRepositoryTest {
 	public void initializeData() {
 
 		account = Account.builder().accountNumber("1234").accountStatus(AccountStatus.ACTIVE.name())
-				.accountType(AccountType.SAVINGS.name()).balanceAmount(new BigDecimal(100)).emailId("test1@test1.com")
-				.fullName("Test1 Test1").mobileNumber("1111111111").build();
+				.accountType(AccountType.SAVINGS.name()).balanceAmount(new BigDecimal(100)).emailId("test3@test1.com")
+				.fullName("Test1 Test1").mobileNumber("1111711111").build();
 
 		List<Transaction> transactions = new ArrayList<>();
 		transaction1 = Transaction.builder().account(account).transactionAmount(new BigDecimal(10))

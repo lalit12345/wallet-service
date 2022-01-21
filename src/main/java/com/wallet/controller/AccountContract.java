@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "/accounts", description = "Account related operations for the user")
+@Tag(name = "/v1/accounts", description = "Account related operations for the user")
 public interface AccountContract {
 
 	/**

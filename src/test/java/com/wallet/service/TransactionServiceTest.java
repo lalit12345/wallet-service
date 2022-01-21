@@ -22,9 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-import com.wallet.exception.AccountDoesNotExistException;
 import com.wallet.exception.DuplicateTransactionException;
-import com.wallet.exception.InsufficientFundException;
+import com.wallet.exception.InvalidRequestDataException;
 import com.wallet.model.dto.request.TransactionRequest;
 import com.wallet.model.dto.response.TransactionDto;
 import com.wallet.model.dto.response.TransactionResponse;
@@ -65,10 +64,9 @@ public class TransactionServiceTest {
 		when(accountRepository.findByAccountNumberAndAccountStatus(anyString(), anyString()))
 				.thenReturn(Optional.empty());
 
-		AccountDoesNotExistException accountDoesNotExistException = assertThrows(AccountDoesNotExistException.class,
-				() -> {
-					transactionServiceImpl.performDebit("123456", transactionRequest);
-				});
+		InvalidRequestDataException accountDoesNotExistException = assertThrows(InvalidRequestDataException.class, () -> {
+			transactionServiceImpl.performDebit("123456", transactionRequest);
+		});
 
 		assertEquals("Account does not exist with accountNumber: 123456", accountDoesNotExistException.getMessage());
 	}
@@ -111,7 +109,7 @@ public class TransactionServiceTest {
 				.thenReturn(Optional.of(account));
 		when(transactionRepository.findByTransactionId(anyString())).thenReturn(Optional.empty());
 
-		InsufficientFundException insufficientFundException = assertThrows(InsufficientFundException.class, () -> {
+		InvalidRequestDataException insufficientFundException = assertThrows(InvalidRequestDataException.class, () -> {
 			transactionServiceImpl.performDebit("123456", transactionRequest);
 		});
 
@@ -152,10 +150,9 @@ public class TransactionServiceTest {
 		when(accountRepository.findByAccountNumberAndAccountStatus(anyString(), anyString()))
 				.thenReturn(Optional.empty());
 
-		AccountDoesNotExistException accountDoesNotExistException = assertThrows(AccountDoesNotExistException.class,
-				() -> {
-					transactionServiceImpl.performCredit("123456", transactionRequest);
-				});
+		InvalidRequestDataException accountDoesNotExistException = assertThrows(InvalidRequestDataException.class, () -> {
+			transactionServiceImpl.performCredit("123456", transactionRequest);
+		});
 
 		assertEquals("Account does not exist with accountNumber: 123456", accountDoesNotExistException.getMessage());
 	}
@@ -213,10 +210,9 @@ public class TransactionServiceTest {
 		when(accountRepository.findByAccountNumberAndAccountStatus(anyString(), anyString()))
 				.thenReturn(Optional.empty());
 
-		AccountDoesNotExistException accountDoesNotExistException = assertThrows(AccountDoesNotExistException.class,
-				() -> {
-					transactionServiceImpl.getAllTransactions("123456", 0, 10);
-				});
+		InvalidRequestDataException accountDoesNotExistException = assertThrows(InvalidRequestDataException.class, () -> {
+			transactionServiceImpl.getAllTransactions("123456", 0, 10);
+		});
 
 		assertEquals("Account does not exist with accountNumber: 123456", accountDoesNotExistException.getMessage());
 	}

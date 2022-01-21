@@ -8,6 +8,8 @@ public class Constants {
 
 	public static final String ACCOUNT_DOES_NOT_EXIST_MESSAGE = "Account does not exist with accountNumber: %s";
 
+	public static final String ACCOUNT_ALREADY_EXISTS_MESSAGE = "Account already exists either with emailId: %s or mobileNumber: %s";
+
 	public static final String DUPLICATE_TRANSACTION_MESSAGE = "Transaction was already performed with transactionId: %s";
 
 	public static final String REQUESTED_PAGE_EXCEEDED_MESSAGE = "Requested page exceeds total number of pages: %d";

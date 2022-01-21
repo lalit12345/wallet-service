@@ -39,7 +39,7 @@ public class AccountRepositoryTest {
 
 		account = Account.builder().accountNumber("12345").accountStatus(AccountStatus.ACTIVE.name())
 				.accountType(AccountType.SAVINGS.name()).balanceAmount(new BigDecimal(100)).emailId("test1@test1.com")
-				.fullName("Test1 Test1").mobileNumber("1111111111").build();
+				.fullName("Test1 Test1").mobileNumber("1111611111").build();
 
 		List<Transaction> transactions = new ArrayList<>();
 		transaction = Transaction.builder().account(account).transactionAmount(new BigDecimal(10))
@@ -62,7 +62,7 @@ public class AccountRepositoryTest {
 		assertTrue(optionalAccount.isPresent());
 		assertEquals("test1@test1.com", createdAccount.getEmailId());
 		assertEquals("Test1 Test1", createdAccount.getFullName());
-		assertEquals("1111111111", createdAccount.getMobileNumber());
+		assertEquals("1111611111", createdAccount.getMobileNumber());
 		assertEquals("12345", createdAccount.getAccountNumber());
 		assertEquals("ACTIVE", createdAccount.getAccountStatus());
 		assertEquals("100.00", createdAccount.getBalanceAmount().toPlainString());
@@ -72,10 +72,12 @@ public class AccountRepositoryTest {
 	@Test
 	public void shouldNotReturnAnAccountByAccountNumberIfStatusIsInactive() {
 
+		account.setEmailId("test2@test.com");
+		account.setMobileNumber("2222322222");
 		account.setAccountStatus(AccountStatus.INACTIVE.name());
 		accountRepository.save(account);
 
-		Optional<Account> optionalAccount = accountRepository.findByAccountNumberAndAccountStatus("1234",
+		Optional<Account> optionalAccount = accountRepository.findByAccountNumberAndAccountStatus("12345",
 				AccountStatus.ACTIVE.name());
 
 		assertFalse(optionalAccount.isPresent());

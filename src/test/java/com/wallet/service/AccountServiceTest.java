@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.wallet.exception.AccountDoesNotExistException;
+import com.wallet.exception.InvalidRequestDataException;
 import com.wallet.model.dto.request.AccountRequest;
 import com.wallet.model.dto.response.AccountDto;
 import com.wallet.model.entity.Account;
@@ -65,6 +65,27 @@ public class AccountServiceTest {
 	}
 
 	@Test
+	public void shouldThrowAnExceptionIfAccountAlreadyExistsWithGivenEmailOrMobile() {
+
+		Account account = Account.builder().accountNumber("123456").emailId("test1@test1.com")
+				.balanceAmount(new BigDecimal(100)).fullName("Test1 Test1").mobileNumber("1111111111")
+				.accountType("SAVINGS").accountStatus("ACTIVE").build();
+
+		AccountRequest accountRequest = AccountRequest.builder().accountType("SAVINGS")
+				.balanceAmount(new BigDecimal(100)).emailId("test1@test1.com").fullName("Test1 Test1")
+				.mobileNumber("1111111111").build();
+
+		when(accountRepository.findByEmailIdOrMobileNumber(anyString(), anyString())).thenReturn(Optional.of(account));
+
+		InvalidRequestDataException accountAlreadyExistsException = assertThrows(InvalidRequestDataException.class, () -> {
+			accountServiceImpl.createAccount(accountRequest);
+		});
+
+		assertEquals("Account already exists either with emailId: test1@test1.com or mobileNumber: 1111111111",
+				accountAlreadyExistsException.getMessage());
+	}
+
+	@Test
 	public void shouldFetchBalanceForGivenAccount() {
 
 		Account account = Account.builder().accountNumber("123456").emailId("test1@test1.com")
@@ -87,10 +108,9 @@ public class AccountServiceTest {
 		when(accountRepository.findByAccountNumberAndAccountStatus(anyString(), anyString()))
 				.thenReturn(Optional.empty());
 
-		AccountDoesNotExistException accountDoesNotExistException = assertThrows(AccountDoesNotExistException.class,
-				() -> {
-					accountServiceImpl.fetchBalance("123456");
-				});
+		InvalidRequestDataException accountDoesNotExistException = assertThrows(InvalidRequestDataException.class, () -> {
+			accountServiceImpl.fetchBalance("123456");
+		});
 
 		assertEquals("Account does not exist with accountNumber: 123456", accountDoesNotExistException.getMessage());
 	}

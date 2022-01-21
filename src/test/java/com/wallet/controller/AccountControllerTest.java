@@ -27,9 +27,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wallet.exception.AccountDoesNotExistException;
 import com.wallet.exception.DuplicateTransactionException;
-import com.wallet.exception.InsufficientFundException;
+import com.wallet.exception.InvalidRequestDataException;
 import com.wallet.model.dto.request.AccountRequest;
 import com.wallet.model.dto.request.TransactionRequest;
 import com.wallet.model.dto.response.AccountDto;
@@ -64,8 +63,7 @@ public class AccountControllerTest {
 
 		when(accountService.createAccount(any())).thenReturn(accountDto);
 
-		mockMvc.perform(
-				post("/accounts").contentType(MediaType.APPLICATION_JSON_VALUE).content(toJsonString(accountRequest)))
+		mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON_VALUE).content(toJsonString(accountRequest)))
 				.andExpect(status().isCreated()).andExpect(jsonPath("$.message").value("Account created successfully"))
 				.andExpect(jsonPath("$.accountNumber").value("123456"));
 
@@ -83,8 +81,7 @@ public class AccountControllerTest {
 		AccountRequest accountRequest = AccountRequest.builder().emailId("testtest.com").accountType("SAVINGSS")
 				.balanceAmount(new BigDecimal(0)).fullName("").mobileNumber("M1111111111").build();
 
-		mockMvc.perform(
-				post("/accounts").contentType(MediaType.APPLICATION_JSON_VALUE).content(toJsonString(accountRequest)))
+		mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON_VALUE).content(toJsonString(accountRequest)))
 				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").value("Bad Request"))
 				.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder(fields.toArray())))
 				.andExpect(jsonPath("$.errors[*].error", containsInAnyOrder(errors.toArray())));
@@ -100,21 +97,10 @@ public class AccountControllerTest {
 
 		when(accountService.fetchBalance(anyString())).thenReturn(accountDto);
 
-		mockMvc.perform(get("/accounts/123456/balance")).andExpect(status().isOk())
+		mockMvc.perform(get("/123456/balance")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.message").value("Account balance fetched successfully"))
 				.andExpect(jsonPath("$.accountNumber").value("123456"))
 				.andExpect(jsonPath("$.accountBalance").value("100"));
-	}
-
-	@Test
-	public void shouldReturnNotFoundWhenAccountNumberIsNotPresent() throws Exception {
-
-		AccountDto accountDto = AccountDto.builder().message("Account balance fetched successfully")
-				.accountNumber("123456").accountBalance("100").build();
-
-		when(accountService.fetchBalance(anyString())).thenReturn(accountDto);
-
-		mockMvc.perform(get("/accounts/" + "" + "/balance")).andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -129,7 +115,7 @@ public class AccountControllerTest {
 
 		when(transactionService.performDebit(anyString(), any())).thenReturn(transactionDto);
 
-		mockMvc.perform(post("/accounts/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(toJsonString(transactionRequest))).andExpect(status().isOk())
 				.andExpect(jsonPath("$.message").value("Account debited successfully"))
 				.andExpect(jsonPath("$.accountNumber").value("123456"))
@@ -147,7 +133,7 @@ public class AccountControllerTest {
 		TransactionRequest transactionRequest = TransactionRequest.builder().amount(new BigDecimal(0)).transactionId("")
 				.build();
 
-		mockMvc.perform(post("/accounts/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(toJsonString(transactionRequest))).andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message").value("Bad Request"))
 				.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder(fields.toArray())))
@@ -161,9 +147,9 @@ public class AccountControllerTest {
 				.transactionId("TId18").build();
 
 		when(transactionService.performDebit(anyString(), any()))
-				.thenThrow(new InsufficientFundException("Invalid requested amount"));
+				.thenThrow(new InvalidRequestDataException("Invalid requested amount"));
 
-		mockMvc.perform(post("/accounts/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(toJsonString(transactionRequest))).andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status").value(400))
 				.andExpect(jsonPath("$.message").value("Invalid requested amount"));
@@ -176,9 +162,9 @@ public class AccountControllerTest {
 				.transactionId("TId18").build();
 
 		when(transactionService.performDebit(anyString(), any()))
-				.thenThrow(new AccountDoesNotExistException("Account does not exist"));
+				.thenThrow(new InvalidRequestDataException("Account does not exist"));
 
-		mockMvc.perform(post("/accounts/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(toJsonString(transactionRequest))).andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status").value(400))
 				.andExpect(jsonPath("$.message").value("Account does not exist"));
@@ -193,7 +179,7 @@ public class AccountControllerTest {
 		when(transactionService.performDebit(anyString(), any()))
 				.thenThrow(new DuplicateTransactionException("Duplicate transaction"));
 
-		mockMvc.perform(post("/accounts/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/123456/transactions/debit").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(toJsonString(transactionRequest))).andExpect(status().isConflict())
 				.andExpect(jsonPath("$.status").value(409))
 				.andExpect(jsonPath("$.message").value("Duplicate transaction"));
@@ -211,7 +197,7 @@ public class AccountControllerTest {
 
 		when(transactionService.performCredit(anyString(), any())).thenReturn(transactionDto);
 
-		mockMvc.perform(post("/accounts/123456/transactions/credit").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/123456/transactions/credit").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(toJsonString(transactionRequest))).andExpect(status().isOk())
 				.andExpect(jsonPath("$.message").value("Account credited successfully"))
 				.andExpect(jsonPath("$.accountNumber").value("123456"))
@@ -229,7 +215,7 @@ public class AccountControllerTest {
 		TransactionRequest transactionRequest = TransactionRequest.builder().amount(new BigDecimal(0)).transactionId("")
 				.build();
 
-		mockMvc.perform(post("/accounts/123456/transactions/credit").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/123456/transactions/credit").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(toJsonString(transactionRequest))).andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message").value("Bad Request"))
 				.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder(fields.toArray())))
@@ -252,7 +238,7 @@ public class AccountControllerTest {
 				.thenReturn(TransactionResponse.builder().message("Success").totalNoOfPages(1).totalNoOfTransactions(2)
 						.transactions(transactionDtos).build());
 
-		mockMvc.perform(get("/accounts/transactions?accountNumber=123456&page=0&limit=2")).andExpect(status().isOk())
+		mockMvc.perform(get("/transactions?accountNumber=123456&page=0&limit=2")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.message").value("Success")).andExpect(jsonPath("$.totalNoOfPages").value(1))
 				.andExpect(jsonPath("$.totalNoOfTransactions").value(2));
 	}

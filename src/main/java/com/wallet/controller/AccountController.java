@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/accounts")
+@RequestMapping
 public class AccountController implements AccountContract {
 
 	@Autowired
