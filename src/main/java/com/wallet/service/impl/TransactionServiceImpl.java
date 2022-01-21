@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wallet.exception.DuplicateTransactionException;
 import com.wallet.exception.InvalidRequestDataException;
@@ -158,7 +157,8 @@ public class TransactionServiceImpl implements TransactionService {
 		if (optionalAccount.isEmpty()) {
 
 			log.error(String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
-			throw new InvalidRequestDataException(String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
+			throw new InvalidRequestDataException(
+					String.format(Constants.ACCOUNT_DOES_NOT_EXIST_MESSAGE, accountNumber));
 		}
 		return optionalAccount;
 	}
